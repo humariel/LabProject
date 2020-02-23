@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
+import java.time.temporal.Temporal;
+
 @SpringBootApplication
 @EnableScheduling
 public class Application {

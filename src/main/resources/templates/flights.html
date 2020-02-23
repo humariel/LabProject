@@ -6,7 +6,8 @@
 </head>
 <body>
     <h1>Quote</h1>
-    <h2 th:text="${quoteID}"></h2>
-    <h2 th:text="${quote}"></h2>
+    <tr th:each="f: ${flights}">
+        <p><td th:text="${f}"></td></p>
+    </tr>
 </body>
 </html>

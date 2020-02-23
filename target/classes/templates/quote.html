@@ -2,11 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Quote</title>
 </head>
 <body>
     <h1>Quote</h1>
-    <h2 th:text="${quoteID}"></h2>
-    <h2 th:text="${quote}"></h2>
+    <tr th:each="f: ${flights}">
+        <p><td th:text="${f}"></td></p>
+    </tr>
 </body>
 </html>
