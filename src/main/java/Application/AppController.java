@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AppController {
 
-    @GetMapping("/quote")
-    public String quote(Model model){
+    @GetMapping("/flights")
+    public String flights(Model model){
         Object[] f = ScheduledTasks.getRecentFlights();
         model.addAttribute("flights", f);
         return "flights";
