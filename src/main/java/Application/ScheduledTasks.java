@@ -31,7 +31,8 @@ public class ScheduledTasks {
         String url = baseURL + "/flights/all?begin=" + (unixTimestamp-7200) + "&end=" +  unixTimestamp;
         recentFlights = restTemplate.getForObject(url, Flight[].class);
         Arrays.sort(recentFlights, (h1, h2) -> h1.getIcao24().compareTo(h2.getIcao24()));
-
+        log.info(recentFlights.toString());
+        //for(Flight f: recentFlights) log.info(f.toString());
     }
 
     public static Flight[] getRecentFlights(){
