@@ -9,8 +9,9 @@ public class AppController {
 
     @GetMapping("/flights")
     public String flights(Model model){
-        Object[] f = ScheduledTasks.getRecentFlights();
-        model.addAttribute("flights", f);
+        Flight[] flights = ScheduledTasks.getRecentFlights();
+        model.addAttribute("flights", flights);
         return "flights";
     }
+
 }

@@ -1,5 +1,6 @@
 package Application;
 
+import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 
@@ -20,27 +21,20 @@ public class ScheduledTasks {
     private static final long hour = 3600;
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-    private static Object[] recentFlights;
+    private static Flight[] recentFlights;
     private final String baseURL = "https://opensky-network.org/api";
 
-    @Scheduled(fixedRate = 5000)
-    public void reportCurrentTime() {
-        /*Quote quote = restTemplate.getForObject(
-                "http://gturnquist-quoters.cfapps.io/api/random", Quote.class);
-        recentQuote = quote;
-        log.info(quote.toString());*/
+    @Scheduled(fixedRate = 1000)
+    public void reportCurrentTime(){
 
-        //get current hour from previous day
         long unixTimestamp = Instant.now().getEpochSecond() - 24*hour;
         String url = baseURL + "/flights/all?begin=" + (unixTimestamp-7200) + "&end=" +  unixTimestamp;
-        /*System.out.println(baseURL + "/flights/all?begin=" + (unixTimestamp-7200) + "&end=" +  unixTimestamp);
-        FlightList fs = restTemplate.getForObject(baseURL + "/flights/all?begin=" + (unixTimestamp-7200) + "&end=" +  unixTimestamp, FlightList.class);
-        log.info(fs.toString());*/
-        ResponseEntity<Object[]> responseEntity = restTemplate.getForEntity(url, Object[].class);
-        recentFlights = responseEntity.getBody();
+        recentFlights = restTemplate.getForObject(url, Flight[].class);
+        Arrays.sort(recentFlights, (h1, h2) -> h1.getIcao24().compareTo(h2.getIcao24()));
+
     }
 
-    public static Object[] getRecentFlights(){
+    public static Flight[] getRecentFlights(){
         return recentFlights;
     }
 }

@@ -1,6 +1,7 @@
 package Application;
 
 public class Flight {
+    
     private String icao24;
     private int firstSeen;
     private String estDepartureAirport;
