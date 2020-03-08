@@ -1,6 +1,12 @@
 package Application;
 
 import java.time.Instant;
+import java.util.List;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +24,10 @@ public class Application {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
+    private static final String PERSISTENCE_UNIT_NAME = "LabProjectDB";
+    private static EntityManagerFactory factory;
+    private static EntityManager em;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -29,13 +39,30 @@ public class Application {
 
     @Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
+        //createEntityManager();
         int hour = 3600;
         long unixTimestamp = Instant.now().getEpochSecond() - 24*hour;
         String baseURL = "https://opensky-network.org/api";
         String url = baseURL + "/flights/all?begin=" + (unixTimestamp-7200) + "&end=" +  unixTimestamp;
+        System.out.println(url);
 		return args -> {
-			Flight[] flights = restTemplate.getForObject(url, Flight[].class);
+            Flight[] flights = restTemplate.getForObject(url, Flight[].class);
 			log.info(flights.toString());
 		};
-	}
+    }
+    
+    public static EntityManager createEntityManager() { 
+        factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        em = factory.createEntityManager();
+        return em;
+    }
+
+    public static void insertFlight(EntityManager em, Flight f) {
+        System.out.println("Inserting Flight to DB");
+        em.getTransaction().begin();
+        em.persist(f);
+        em.getTransaction().commit();
+        em.close();
+        System.out.println("Flight Inserted");
+    }
 }

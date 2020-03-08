@@ -1,7 +1,17 @@
 package Application;
 
-public class Flight {
-    
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import java.io.Serializable;
+
+@Entity
+public class Flight implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String icao24;
     private int firstSeen;
     private String estDepartureAirport;
