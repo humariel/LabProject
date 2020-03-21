@@ -18,10 +18,9 @@ import java.util.List;
 public class AppController {
 
     private static final Logger log = LoggerFactory.getLogger(AppController.class);
-    private List<String> kafka_messages = new ArrayList<>();
 
     @GetMapping("/api/flights")
-    public Flight[] flights(Model model){
+    public Flight[] flights(){
         Flight[] flights = ScheduledTasks.getRecentFlights();
         return flights;
     }
