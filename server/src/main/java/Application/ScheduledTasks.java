@@ -1,5 +1,6 @@
 package Application;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.client.RestTemplate;
@@ -32,28 +34,39 @@ public class ScheduledTasks {
     private static final long hour = 3600;
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
     private static Flight[] recentFlights;
+    private List<Flight> allFlights = new ArrayList<Flight>();
     private final String baseURL = "https://opensky-network.org/api";
 
     @Scheduled(fixedRate = 1000)
-    public void reportCurrentTime(){
-
+    public void reportCurrentTime() {
         //fetch data from OpenSky REST API
         long unixTimestamp = Instant.now().getEpochSecond() - 24*hour;
         String url = baseURL + "/flights/all?begin=" + (unixTimestamp-7200) + "&end=" +  unixTimestamp;
         recentFlights = restTemplate.getForObject(url, Flight[].class);
         Arrays.sort(recentFlights, Comparator.comparing(h -> h.getIcao24()));
-        //Store data in persistence unit
+        log.info("Fetched data from OpenSky");
+        
         EntityManager em = Application.createEntityManager();
-        Query q = em.createQuery("select t from Flight t");
-        List<Flight> todoList = q.getResultList();
-        int item_number = todoList.size();
-        Application.insertFlight(em, recentFlights[0]);
+        for(Flight f: recentFlights){
+            if(!allFlights.contains(f)){
+                log.info("New Flight");
+                allFlights.add(f);
+                Application.insertFlight(em, f);
+                sendKafkaMessage("flights", f.toString());
+            }
+        }
+        Application.closeEM(em);
+        //Store data in persistence unit
         //Produce kafka message to "flights" topic
-        sendKafkaMessage("flights", recentFlights[0].toString());
+        //sendKafkaMessage("flights", recentFlights[0].toString());
     }
 
-    public static Flight[] getRecentFlights(){
+    public Flight[] getRecentFlights(){
         return recentFlights;
+    }
+
+    public void setAllFlights(List<Flight> fs) {
+        allFlights = fs;
     }
 
     public void sendKafkaMessage(String topic, String msg) {
@@ -67,7 +80,7 @@ public class ScheduledTasks {
 
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                log.info("Sent message=[" + msg + "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                log.info("Kafka: Sent message=[" + msg + "] with offset=[" + result.getRecordMetadata().offset() + "]");
             }
         });
     }

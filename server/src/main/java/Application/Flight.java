@@ -5,6 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 public class Flight implements Serializable {
@@ -140,4 +141,24 @@ public class Flight implements Serializable {
                 ", arrivalAirportCandidatesCount=" + arrivalAirportCandidatesCount +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Flight flight = (Flight) o;
+        return firstSeen == flight.firstSeen &&
+                lastSeen == flight.lastSeen &&
+                estDepartureAirportHorizDistance == flight.estDepartureAirportHorizDistance &&
+                estDepartureAirportVertDistance == flight.estDepartureAirportVertDistance &&
+                estArrivalAirportHorizDistance == flight.estArrivalAirportHorizDistance &&
+                estArrivalAirportVertDistance == flight.estArrivalAirportVertDistance &&
+                departureAirportCandidatesCount == flight.departureAirportCandidatesCount &&
+                arrivalAirportCandidatesCount == flight.arrivalAirportCandidatesCount &&
+                Objects.equals(icao24, flight.icao24) &&
+                Objects.equals(estDepartureAirport, flight.estDepartureAirport) &&
+                Objects.equals(estArrivalAirport, flight.estArrivalAirport) &&
+                Objects.equals(callsign, flight.callsign);
+    }
+
 }

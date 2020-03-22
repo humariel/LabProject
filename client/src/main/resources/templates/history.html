@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>History</title>
+</head>
+<body>
+    <h1>Flights in  our history</h1>
+    <div th:each="f: ${flights}" class="flight">
+        <p>Plane : <span th:text="${f.getIcao24()}"></span></p>
+        <p>First Seen: <span th:text="${f.firstSeen}"></span></p>
+        <p>Last Seen: <span th:text="${f.lastSeen}"></span></p>
+        <p>Departure Airport: <span th:text="${f.estDepartureAirport}"></span></p>
+        <p>Arrival Airport: <span th:text="${f.estArrivalAirport}"></span></p>
+    </div>
+</body>
+<style>
+    .flight {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid gold;;
+    }
+    .flight > p {
+        margin-right: .5rem;
+        font-size: medium;
+        font-weight: bold;
+    }
+    .flight > p > span {
+        font-size: small;
+        font-weight: 400;
+    }
+</style>
+</html>

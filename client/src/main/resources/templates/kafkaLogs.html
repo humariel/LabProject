@@ -1,0 +1,39 @@
+<html>
+<head>
+    <title>Chat WebSocket</title>
+    <script src="stomp.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script type="text/javascript">
+        var stompClient = null;
+
+        function connect() {
+            var socket = new SockJS('/flights');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/logs', function(message) {
+                    console.log(message);
+                });
+            });
+        }
+
+        function disconnect() {
+            if(stompClient != null) {
+                stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        }
+
+    </script>
+</head>
+<body onload="disconnect()">
+<div>
+    <br />
+    <div>
+        <button id="connect" onclick="connect();">Connect to Logs</button>
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+    </div>
+</div>
+
+</body>
+</html>

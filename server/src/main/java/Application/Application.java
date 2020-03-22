@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +29,12 @@ public class Application {
     private static EntityManagerFactory factory;
     private static EntityManager em;
 
+    @Autowired
+    private ScheduledTasks tasks;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+        
     }
 
     @Bean
@@ -45,8 +50,10 @@ public class Application {
         String baseURL = "https://opensky-network.org/api";
         String url = baseURL + "/flights/all?begin=" + (unixTimestamp-7200) + "&end=" +  unixTimestamp;
 		return args -> {
-            Flight[] flights = restTemplate.getForObject(url, Flight[].class);
-			log.info(flights.toString());
+            EntityManager em =  createEntityManager();
+            Query q = em.createQuery("select t from Flight t");
+            List<Flight> fs = q.getResultList();
+            tasks.setAllFlights(fs);
 		};
     }
 
@@ -57,11 +64,13 @@ public class Application {
     }
 
     public static void insertFlight(EntityManager em, Flight f) {
-        log.info("Inserting Flight to DB");
         em.getTransaction().begin();
         em.persist(f);
         em.getTransaction().commit();
+        log.info("Inserted Flight to DB");
+    }
+
+    public static void closeEM(EntityManager em){
         em.close();
-        log.info("Flight Inserted");
     }
 }

@@ -1,6 +1,7 @@
 package application.client_application;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Flight implements Serializable {
 
@@ -18,6 +19,30 @@ public class Flight implements Serializable {
     private int arrivalAirportCandidatesCount;
 
     public Flight(){}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Flight flight = (Flight) o;
+        return firstSeen == flight.firstSeen &&
+                lastSeen == flight.lastSeen &&
+                estDepartureAirportHorizDistance == flight.estDepartureAirportHorizDistance &&
+                estDepartureAirportVertDistance == flight.estDepartureAirportVertDistance &&
+                estArrivalAirportHorizDistance == flight.estArrivalAirportHorizDistance &&
+                estArrivalAirportVertDistance == flight.estArrivalAirportVertDistance &&
+                departureAirportCandidatesCount == flight.departureAirportCandidatesCount &&
+                arrivalAirportCandidatesCount == flight.arrivalAirportCandidatesCount &&
+                Objects.equals(icao24, flight.icao24) &&
+                Objects.equals(estDepartureAirport, flight.estDepartureAirport) &&
+                Objects.equals(estArrivalAirport, flight.estArrivalAirport) &&
+                Objects.equals(callsign, flight.callsign);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(icao24, firstSeen, estDepartureAirport, lastSeen, estArrivalAirport, callsign, estDepartureAirportHorizDistance, estDepartureAirportVertDistance, estArrivalAirportHorizDistance, estArrivalAirportVertDistance, departureAirportCandidatesCount, arrivalAirportCandidatesCount);
+    }
 
     public String getIcao24() {
         return icao24;
