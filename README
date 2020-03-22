@@ -1,0 +1,39 @@
+LabProject - L34
+
+### How to Run Application ###
+
+1. Make sure kafka is up and running:
+	On your kafka installation directory:
+		--> $ bin/zookeeper-server-start.sh config/zookeeper.properties
+		--> $ bin/kafka-server-start.sh config/server.properties 
+
+	Note:The ports used are the kafka default ones
+
+2. Once kafka is running, run the server:
+	First, go to the server folder of the project : LabProject/server .
+	To run the server:
+		--> $ mvn spring-boot:run
+		--> Or use your IDE to run it
+
+	Note: You may need admin privileges;
+	      The server runs on port 8080;
+
+3. Run the client:
+	First, go to the client folder of the project : LabProject/client .
+	To run the client:
+		--> $ mvn spring-boot:run
+		--> Or use your IDE to run it
+
+	Note: The server runs on port 8081;
+
+4. To see the application go to localhost:8081 on your browser.
+
+### The REST API ###
+
+After having the server running (steps 1 and 2 above) you can access the REST API 
+at localhost:8080/api . The existing endpoints are /flights and /history .
+
+Made by:
+Gonçalo Vítor - 85119 (gvitor@ua.pt)
+Gabriel Silva - 85129 (augustosilva@ua.pt)
+Group ID - L34
