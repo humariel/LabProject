@@ -22,6 +22,7 @@
             var table = document.getElementById("logs");
             var row = table.insertRow(0);
             var cell = row.insertCell(0);
+            row.classList="flight"
             cell.innerHTML = message;
         }
 
@@ -43,24 +44,54 @@
     </script>
 </head>
 <body onload="disconnect()">
-<div>
-    <br />
-    <div>
-        <button id="connect" onclick="connect();">Connect to Logs</button>
-        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
-        <div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Logs</th>
-                </tr>
-                </thead>
-                <tbody id="logs">
-                </tbody>
-            </table>
-        </div>
+    <div class="header">
+        <form action="/" >
+            <button type="submit">Go Back</button>
+        </form>
+        <button type="button" id="connect" onclick="connect();">Connect to Logs</button>
+        <button type="button" id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
     </div>
-</div>
+    <h1>Logs</h1>
+    <table id="logs"></table>
 
 </body>
+
+<style>
+    .header {
+        display: flex;
+        align-items: center;
+    }
+    .header > * {
+        margin-right: .5rem;
+    }
+    form {
+        margin: 0;
+    }
+    button {
+        width: 7rem;
+        height: 2.25rem;
+    }
+    #flights {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .flight {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid gold;
+        margin: 1rem 0;
+    }
+    .flight > p {
+        width: 20%;
+        margin-right: .5rem;
+        font-size: medium;
+        font-weight: bold;
+    }
+    .flight > p > span {
+        font-size: small;
+        font-weight: 400;
+    }
+</style>
+
 </html>

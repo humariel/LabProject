@@ -5,6 +5,9 @@
     <title>History</title>
 </head>
 <body>
+    <form action="/" >
+        <button type="submit">Go Back</button>
+    </form>
     <h1>Flights in  our history</h1>
     <div th:each="f: ${flights}" class="flight">
         <p>Plane : <span th:text="${f.getIcao24()}"></span></p>
@@ -15,12 +18,18 @@
     </div>
 </body>
 <style>
+    #flights {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
     .flight {
         display: flex;
         align-items: center;
         border-bottom: 1px solid gold;;
     }
     .flight > p {
+        width: 20%;
         margin-right: .5rem;
         font-size: medium;
         font-weight: bold;
@@ -28,6 +37,13 @@
     .flight > p > span {
         font-size: small;
         font-weight: 400;
+    }
+    form {
+        margin: 0;
+    }
+    button {
+        width: 7rem;
+        height: 2.25rem;
     }
 </style>
 </html>

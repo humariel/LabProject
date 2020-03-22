@@ -28,7 +28,7 @@ public class ScheduledTasks {
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, Flight> kafkaTemplate;
 
 
     private static final long hour = 3600;
@@ -52,7 +52,7 @@ public class ScheduledTasks {
                 log.info("New Flight");
                 allFlights.add(f);
                 Application.insertFlight(em, f);
-                sendKafkaMessage("flights", f.toString());
+                sendKafkaMessage("flights", f);
             }
         }
         Application.closeEM(em);
@@ -69,18 +69,18 @@ public class ScheduledTasks {
         allFlights = fs;
     }
 
-    public void sendKafkaMessage(String topic, String msg) {
-        ListenableFuture<SendResult<String,String>> future = kafkaTemplate.send(topic, msg);
+    public void sendKafkaMessage(String topic, Flight flight) {
+        ListenableFuture<SendResult<String, Flight>> future = kafkaTemplate.send(topic, flight);
 
-        future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+        future.addCallback(new ListenableFutureCallback<SendResult<String, Flight>>() {
             @Override
             public void onFailure(Throwable ex) {
-                log.info("Unable to send message=[" + msg + "] due to : " + ex.getMessage());
+                log.info("Unable to send message=[" + flight.toString() + "] due to : " + ex.getMessage());
             }
 
             @Override
-            public void onSuccess(SendResult<String, String> result) {
-                log.info("Kafka: Sent message=[" + msg + "] with offset=[" + result.getRecordMetadata().offset() + "]");
+            public void onSuccess(SendResult<String, Flight> result) {
+                log.info("Kafka: Sent message=[" + flight.toString() + "] with offset=[" + result.getRecordMetadata().offset() + "]");
             }
         });
     }
