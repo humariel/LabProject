@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Chat WebSocket</title>
+    <title>Logs</title>
     <script src="stomp.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script type="text/javascript">
@@ -9,12 +9,20 @@
         function connect() {
             var socket = new SockJS('/flights');
             stompClient = Stomp.over(socket);
+            setConnected(true);
             stompClient.connect({}, function(frame) {
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/logs', function(message) {
-                    console.log(message);
+                    showLogs(message.body);
                 });
             });
+        }
+
+        function showLogs(message) {
+            var table = document.getElementById("logs");
+            var row = table.insertRow(0);
+            var cell = row.insertCell(0);
+            cell.innerHTML = message;
         }
 
         function disconnect() {
@@ -22,6 +30,14 @@
                 stompClient.disconnect();
             }
             console.log("Disconnected");
+            setConnected(false);
+        }
+
+        function setConnected(connected) {
+            var connect = document.getElementById("connect");
+            var disconnect = document.getElementById("disconnect");
+            connect.disabled = connected;
+            disconnect.disabled = !connected;
         }
 
     </script>
@@ -32,6 +48,17 @@
     <div>
         <button id="connect" onclick="connect();">Connect to Logs</button>
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Logs</th>
+                </tr>
+                </thead>
+                <tbody id="logs">
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
