@@ -38,7 +38,7 @@ public class AppController {
 
     @GetMapping("/flights")
     public String flights(Model model){
-        String url = "http://localhost:8080/api/flights";
+        String url = "http://server:8080/api/flights";
         Flight[] flights = restTemplate.getForObject(url, Flight[].class);
         model.addAttribute("flights", flights);
         return "flights";
@@ -46,7 +46,7 @@ public class AppController {
 
     @GetMapping("/history")
     public String history(Model model){
-        String url = "http://localhost:8080/api/history";
+        String url = "http://server:8080/api/history";
         Flight[] flights = restTemplate.getForObject(url, Flight[].class);
         model.addAttribute("flights", flights);
         return "history";

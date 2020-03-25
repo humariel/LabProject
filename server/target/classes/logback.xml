@@ -23,7 +23,7 @@
         <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy" />
         <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy" />
 
-        <producerConfig>bootstrap.servers=localhost:9092</producerConfig>
+        <producerConfig>bootstrap.servers=kafka:9092</producerConfig>
         <producerConfig>acks=0</producerConfig>
         <producerConfig>linger.ms=100</producerConfig>
         <producerConfig>max.block.ms=100</producerConfig>
