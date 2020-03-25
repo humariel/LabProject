@@ -54,3 +54,5 @@ services:
     container_name: client
     ports:
       - 8081:8081
+    depends_on: 
+      - server
